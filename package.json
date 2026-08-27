@@ -1,0 +1,13 @@
+{
+  "name": "my-astro-blog",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "check": "astro check",
+    "build": "astro build"
+  },
+  "dependencies": {
+    "astro": "^5.0.0"
+  }
+}
