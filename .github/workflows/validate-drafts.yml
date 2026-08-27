@@ -1,0 +1,48 @@
+name: Validate Astro Draft Receiver
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "package.json"
+      - "astro.config.mjs"
+      - "src/content.config.ts"
+      - "src/content/blog/**"
+      - "src/pages/**"
+      - ".github/workflows/validate-drafts.yml"
+  pull_request:
+    paths:
+      - "package.json"
+      - "astro.config.mjs"
+      - "src/content.config.ts"
+      - "src/content/blog/**"
+      - "src/pages/**"
+      - ".github/workflows/validate-drafts.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm install
+      - run: npm run check
+      - run: npm run build
+      - name: Safety summary
+        if: always()
+        run: |
+          {
+            echo "## Astro Draft Receiver"
+            echo
+            echo "- Content collection requires draft: true."
+            echo "- No article route is enabled."
+            echo "- No deployment job is configured."
+          } >> "$GITHUB_STEP_SUMMARY"
